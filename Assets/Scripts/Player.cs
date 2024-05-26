@@ -5,14 +5,22 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Sprite playerUp, playerDown, playerLeft, playerRight;
+
+    private Vector2 originalPosition;
     // Start is called before the first frame update
     void Start()
     {
-        
+        originalPosition = transform.localPosition;
+    }
+    void Update()
+    {
+        UpdatePosition();
+
+        CheckCollision();
     }
 
     // Update is called once per frame
-    void Update()
+    void UpdatePosition()
     {
         Vector2 pos = transform.localPosition;
 
@@ -28,6 +36,7 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.S))
         {
             GetComponent<SpriteRenderer>().sprite = playerDown;
+            pos += Vector2.down;
             pos += Vector2.down;
             pos += Vector2.down;
             pos += Vector2.down;
@@ -59,11 +68,12 @@ public class Player : MonoBehaviour
 
         transform.localPosition = pos;
 
-        CheckCollision();
+        
 
     }
     private void CheckCollision ()
     {
+        bool isSafe = true;
         GameObject[] gameObject = GameObject.FindGameObjectsWithTag("collidableOBJ");
 
         foreach (GameObject go in gameObject)
@@ -74,14 +84,43 @@ public class Player : MonoBehaviour
             {
                 if(collidableOBJ.isSafe)
                 {
-                    Debug.Log("Safe");
+                    isSafe = true;
+
+                    if(collidableOBJ.isLog)
+                    {
+                        Vector2 pos = transform.localPosition;
+
+                        if(collidableOBJ.GetComponent<Log>().moveRight)
+                        {
+                            pos.x += collidableOBJ.GetComponent<Log>().moveSpeed * Time.deltaTime;
+
+                            if(transform.position.x - GetComponent<SpriteRenderer>().size.x /2 >= 53.4f)
+                            {
+                                pos.x = transform.position.x /2 -106.8f;
+                            }
+                        }
+                        else
+                        {
+                            pos.x -= collidableOBJ.GetComponent<Log>().moveSpeed * Time.deltaTime;
+                        }
+                        transform.localPosition = pos;
+                    }
+                    break;
+                    
                 }
                 else
                 {
-                    Debug.Log(" NotSafe");
+                    isSafe = false;
+                    
                 }
             }
 
         }
+        if(!isSafe)
+        {
+            transform.localPosition = originalPosition;
+            transform.GetComponent<SpriteRenderer>().sprite = playerUp;
+        }
     }
+
 }

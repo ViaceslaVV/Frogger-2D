@@ -5,6 +5,7 @@ using UnityEngine;
 public class CollidableOBJ : MonoBehaviour
 {
     public bool isSafe;
+    public bool isLog;
 
     Rect playerRect;
     Vector2 playerSize;
