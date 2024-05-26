@@ -19,22 +19,23 @@ public class Player : MonoBehaviour
         CheckCollision();
     }
 
+    Vector2 pos;
     // Update is called once per frame
     void UpdatePosition()
     {
-        Vector2 pos = transform.localPosition;
+        pos = transform.localPosition;
 
-        if (Input.GetKeyDown(KeyCode.W)) 
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            GetComponent<SpriteRenderer>().sprite = playerUp;
-            pos += Vector2.up;
-            pos += Vector2.up;
-            pos += Vector2.up;
+            transform.parent = null;
 
-            
+            GetComponent<SpriteRenderer>().sprite = playerUp;
+            pos += Vector2.up * 3;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
+            transform.parent = null;
+
             GetComponent<SpriteRenderer>().sprite = playerDown;
             pos += Vector2.down;
             pos += Vector2.down;
@@ -48,15 +49,19 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
+            transform.parent = null;
+
             GetComponent<SpriteRenderer>().sprite = playerLeft;
             pos += Vector2.left;
             pos += Vector2.left;
             pos += Vector2.left;
 
-            
+
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
+            transform.parent = null;
+
             GetComponent<SpriteRenderer>().sprite = playerRight;
             pos += Vector2.right;
             pos += Vector2.right;
@@ -64,14 +69,14 @@ public class Player : MonoBehaviour
 
 
         }
-        
+
 
         transform.localPosition = pos;
 
-        
+
 
     }
-    private void CheckCollision ()
+    private void CheckCollision()
     {
         bool isSafe = true;
         GameObject[] gameObject = GameObject.FindGameObjectsWithTag("collidableOBJ");
@@ -86,26 +91,7 @@ public class Player : MonoBehaviour
                 {
                     isSafe = true;
 
-                    if(collidableOBJ.isLog)
-                    {
-                        Vector2 pos = transform.localPosition;
-
-                        if(collidableOBJ.GetComponent<Log>().moveRight)
-                        {
-                            pos.x += collidableOBJ.GetComponent<Log>().moveSpeed * Time.deltaTime;
-
-                            if(transform.position.x - GetComponent<SpriteRenderer>().size.x /2 >= 53.4f)
-                            {
-                                pos.x = transform.position.x /2 -106.8f;
-                            }
-                        }
-                        else
-                        {
-                            pos.x -= collidableOBJ.GetComponent<Log>().moveSpeed * Time.deltaTime;
-                        }
-                        transform.localPosition = pos;
-                    }
-                    break;
+                    
                     
                 }
                 else
@@ -118,9 +104,44 @@ public class Player : MonoBehaviour
         }
         if(!isSafe)
         {
+            print("Hello");
             transform.localPosition = originalPosition;
             transform.GetComponent<SpriteRenderer>().sprite = playerUp;
         }
+        
     }
 
+    /*private void OnTriggerStay2D(Collider2D collision)
+    {
+        print("TRIGGER");
+        if (collision.transform.CompareTag("Platform"))
+        {
+            pos = transform.localPosition;
+            pos.x += collision.GetComponent<Log>().moveSpeed * Time.deltaTime;
+
+            if (transform.position.x >= 53.4f)
+            {
+                pos.x = transform.position.x / 2 - 106.8f;
+                transform.localPosition = pos;
+            }
+        }
+    }
+    */
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+
+        GameObject[] gameObject = GameObject.FindGameObjectsWithTag("collidableOBJ");
+        CollidableOBJ collidableOBJ = GetComponent<CollidableOBJ>();
+        if (collision.transform.CompareTag("Platform"))
+        {
+            transform.parent = collision.transform;
+            transform.localPosition = Vector3.zero;
+        }
+        
+
+
+
+    }
 }
