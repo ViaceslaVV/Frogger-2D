@@ -8,6 +8,7 @@ TagManager:
   - collidableOBJ
   - Log
   - Platform
+  - Home
   layers:
   - Default
   - TransparentFX
