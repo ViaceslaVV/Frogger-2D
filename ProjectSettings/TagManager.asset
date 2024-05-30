@@ -9,6 +9,8 @@ TagManager:
   - Log
   - Platform
   - Home
+  - Next
+  - Walls
   layers:
   - Default
   - TransparentFX

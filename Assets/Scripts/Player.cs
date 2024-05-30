@@ -98,7 +98,9 @@ public class Player : MonoBehaviour
 
         if (!isSafe)
         {
-            print("Hello");
+            transform.localPosition = originalPosition;
+            transform.GetComponent<SpriteRenderer>().sprite = playerUp;
+            transform.parent = null;
             LoseLife();
         }
     }
@@ -121,6 +123,16 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        if (collision.transform.CompareTag("Next"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        if (collision.transform.CompareTag("Walls"))
+        {
+            transform.localPosition = originalPosition;
+            transform.GetComponent<SpriteRenderer>().sprite = playerUp;
+            transform.parent = null;
+        }
 
     }
 
@@ -134,14 +146,16 @@ public class Player : MonoBehaviour
         }
         if (collision.transform.CompareTag("Danger"))
         {
-            // Ensure that we are continuously resetting the player on water
+            
             transform.localPosition = originalPosition;
             transform.GetComponent<SpriteRenderer>().sprite = playerUp;
+            
             transform.parent = null;
+            
         }
         if (collision.transform.CompareTag("Home"))
         {
-            // Ensure that we are continuously resetting the player on water
+            
             transform.localPosition = originalPosition;
             transform.GetComponent<SpriteRenderer>().sprite = playerUp;
             transform.parent = null;
@@ -169,8 +183,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            // Handle game over logic
-            Debug.Log("Game Over");
+            losePanel.SetActive(true);
+
         }
     }
 
